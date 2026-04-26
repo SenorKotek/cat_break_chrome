@@ -1,6 +1,13 @@
 (() => {
-  const INTERVAL_MS = 30_000;
+  const MIN_INTERVAL_MS = 60_000;
+  const MAX_INTERVAL_MS = 300_000;
   const OVERLAY_ID = 'cat-break-overlay-root';
+
+  function getRandomInterval() {
+    return Math.floor(
+      Math.random() * (MAX_INTERVAL_MS - MIN_INTERVAL_MS + 1) + MIN_INTERVAL_MS
+    );
+  }
 
   function showCatBreak() {
     if (document.getElementById(OVERLAY_ID)) {
@@ -51,5 +58,14 @@
     setTimeout(cleanup, 15_000);
   }
 
-  setInterval(showCatBreak, INTERVAL_MS);
+  function scheduleNextCatBreak() {
+    const nextInterval = getRandomInterval();
+
+    setTimeout(() => {
+      showCatBreak();
+      scheduleNextCatBreak();
+    }, nextInterval);
+  }
+
+  scheduleNextCatBreak();
 })();
