@@ -3,6 +3,20 @@
   const MAX_INTERVAL_MS = 300_000;
   const OVERLAY_ID = 'cat-break-overlay-root';
 
+  function getVideoUrl() {
+    if (!globalThis.chrome?.runtime?.id || !globalThis.chrome?.runtime?.getURL) {
+      return null;
+    }
+
+    try {
+      return chrome.runtime.getURL('cat_break.mp4');
+    } catch {
+      return null;
+    }
+  }
+
+  const VIDEO_URL = getVideoUrl();
+
   function getRandomInterval() {
     return Math.floor(
       Math.random() * (MAX_INTERVAL_MS - MIN_INTERVAL_MS + 1) + MIN_INTERVAL_MS
@@ -10,7 +24,7 @@
   }
 
   function showCatBreak() {
-    if (document.getElementById(OVERLAY_ID)) {
+    if (!VIDEO_URL || document.getElementById(OVERLAY_ID)) {
       return;
     }
 
@@ -28,7 +42,7 @@
     });
 
     const video = document.createElement('video');
-    video.src = chrome.runtime.getURL('cat_break.mp4');
+    video.src = VIDEO_URL;
     video.autoplay = true;
     video.muted = true;
     video.playsInline = true;
@@ -59,6 +73,10 @@
   }
 
   function scheduleNextCatBreak() {
+    if (!VIDEO_URL) {
+      return;
+    }
+
     const nextInterval = getRandomInterval();
 
     setTimeout(() => {
