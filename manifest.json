@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Cat Break Overlay",
+  "version": "1.0.0",
+  "description": "Shows cat_break.mp4 as an overlay at random intervals between 1 and 5 minutes.",
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "cat_break.mp4"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}
